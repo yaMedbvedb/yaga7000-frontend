@@ -1,21 +1,18 @@
+const API_URL = "https://yaga7000-backend.onrender.com/api/ask";
 console.log("🟢 YAGA7000 script loaded");
 
-const API_URL = "https://yaga7000-backend.onrender.com/api/ask";
 
 async function askYaga() {
-  const input = document.getElementById("userInput");
-  const output = document.getElementById("response");
+  const input = document.getElementById("input");
+  const output = document.getElementById("output");
 
   const message = input.value.trim();
-  if (!message) {
-    output.innerText = "🧙‍♀️ Яга ждёт вопрос...";
-    return;
-  }
+  if (!message) return;
 
-  output.innerText = "✨ Яга размышляет...";
+  output.innerText = "🧙‍♀️ Яга думает...";
 
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetch("https://yaga7000-backend.onrender.com/api/ask", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -23,15 +20,19 @@ async function askYaga() {
       body: JSON.stringify({ message })
     });
 
-    if (!response.ok) {
-      throw new Error("Ошибка связи с миром духов");
-    }
+    console.log("RAW RESPONSE:", response);
 
     const data = await response.json();
-   output.innerText = JSON.stringify(data, null, 2);
+    console.log("JSON DATA:", data);
 
+    if (data && data.response) {
+      output.innerText = data.response;
+    } else {
+      output.innerText = "⚠️ Ответ получен, но поле response пустое";
+    }
 
-  } catch (error) {
-    output.innerText = "❌ Яга потеряла связь с миром. Попробуй позже.";
+  } catch (err) {
+    console.error("FETCH ERROR:", err);
+    output.innerText = "🔥 Ошибка связи с Ягой";
   }
 }
