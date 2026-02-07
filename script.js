@@ -1,27 +1,34 @@
-async function askYaga() {
-  const question = document.getElementById("question").value.trim();
-  const answer = document.getElementById("answer");
+const API_URL = "https://yaga7000-backend.onrender.com/api/ask";
 
-  if (!question) {
-    answer.textContent = "🧙‍♀️ Яга ждёт вопрос...";
+async function askYaga() {
+  const input = document.getElementById("userInput");
+  const output = document.getElementById("response");
+
+  const message = input.value.trim();
+  if (!message) {
+    output.innerText = "🧙‍♀️ Яга ждёт вопрос...";
     return;
   }
 
-  answer.textContent = "🧙‍♀️ Яга размышляет…";
+  output.innerText = "✨ Яга размышляет...";
 
   try {
-    const response = await fetch(
-      "https://yaga7000-backend.onrender.com/api/ask",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: question })
-      }
-    );
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
+
+    if (!response.ok) {
+      throw new Error("Ошибка связи с миром духов");
+    }
 
     const data = await response.json();
-    answer.textContent = data.response;
-  } catch (e) {
-    answer.textContent = "🔥 Яга потеряла связь с миром. Попробуй позже.";
+    output.innerText = data.response || "🌀 Яга молчит…";
+
+  } catch (error) {
+    output.innerText = "❌ Яга потеряла связь с миром. Попробуй позже.";
   }
 }
