@@ -1,3 +1,5 @@
+console.log("🟢 YAGA7000 script loaded");
+
 const API_URL = "https://yaga7000-backend.onrender.com/api/ask";
 
 async function askYaga() {
