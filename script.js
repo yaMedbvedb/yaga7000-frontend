@@ -26,7 +26,8 @@ async function askYaga() {
     }
 
     const data = await response.json();
-    output.innerText = data.response || "🌀 Яга молчит…";
+   output.innerText = JSON.stringify(data, null, 2);
+
 
   } catch (error) {
     output.innerText = "❌ Яга потеряла связь с миром. Попробуй позже.";
